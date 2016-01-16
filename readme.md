@@ -11,7 +11,7 @@ $ npm i helper-link-to --save
 
 ## Usage
 
-This helper should be used with an `app` created with [templates][] or something that inherits from [templates][]. See [related projects][#related-projects] for some apps that use [templates][]
+This helper should be used with an `app` created with [templates][] or something that inherits from [templates][]. See [related projects](#related-projects) for some apps that use [templates][]
 
 ### With [assemble][] and [engine-handlebars][]
 
