@@ -62,6 +62,32 @@ Creates output like:
 
 ## API
 
+### [linkTo](index.js#L33)
+[templates][] helper that creates a link from the current view to the specified view on the specified collection.
+
+
+**Params**
+
+* `key` **{String}**: Name of the view to lookup to link to.    
+* `collectionName` **{String}**: Name of the collection to lookup the view on. (Defaults to "pages")    
+* `returns` **{String}**: Relative path to the specified view from the current view.  
+
+**Examples**
+
+
+
+```hbs
+{{! Handlebars example linking from "home.html" to "about.html" in the default "pages" collection }}
+<a href="{{link-to 'about'}}">About</a>
+```
+
+
+```hbs
+{{! Handlebars example linking from "home.html" to "blog/post-1.html" in the "posts" collection }}
+<a href="{{link-to 'post-1' 'posts'}}">Post 1</a>
+```
+
+
 
 ## Related projects
 * [assemble](https://www.npmjs.com/package/assemble): Assemble is a powerful, extendable and easy to use static site generator for node.js. Used… [more](https://www.npmjs.com/package/assemble) | [homepage](https://github.com/assemble/assemble)
