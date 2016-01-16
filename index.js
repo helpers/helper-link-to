@@ -9,6 +9,27 @@
 
 var relativePath = require('relative-dest');
 
+/**
+ * [templates][] helper that creates a link from the current view to the specified view
+ * on the specified collection.
+ *
+ *
+ * ```hbs
+ * {{! Handlebars example linking from "home.html" to "about.html" in the default "pages" collection }}
+ * <a href="{{link-to 'about'}}">About</a>
+ * ```
+ *
+ *
+ * ```hbs
+ * {{! Handlebars example linking from "home.html" to "blog/post-1.html" in the "posts" collection }}
+ * <a href="{{link-to 'post-1' 'posts'}}">Post 1</a>
+ * ```
+ * @param  {String} `key` Name of the view to lookup to link to.
+ * @param  {String} `collectionName` Name of the collection to lookup the view on. (Defaults to "pages")
+ * @return {String} Relative path to the specified view from the current view.
+ * @api public
+ */
+
 module.exports = function linkTo(key, collectionName) {
   var name = collectionName;
   if (typeof name === 'object') {
