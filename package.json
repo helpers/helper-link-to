@@ -31,5 +31,39 @@
     "lodash": "^4.0.0",
     "mocha": "^2.3.4"
   },
-  "keywords": []
+  "keywords": [
+    "assemble",
+    "dest",
+    "generate",
+    "handlebars",
+    "helper",
+    "helpers",
+    "link",
+    "link-to",
+    "lodash",
+    "path",
+    "paths",
+    "relative",
+    "templates",
+    "to",
+    "update",
+    "verb"
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "assemble",
+        "assemble-core",
+        "engine-base",
+        "engine-handlebars",
+        "generate",
+        "handlebars",
+        "relative",
+        "relative-dest",
+        "templates",
+        "update",
+        "verb"
+      ]
+    }
+  }
 }
