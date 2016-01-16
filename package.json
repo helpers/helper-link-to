@@ -1,0 +1,28 @@
+{
+  "name": "helper-link-to",
+  "description": "Templates helper that returns a link path from the current view to the another view.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/helpers/helper-link-to",
+  "author": "Brian Woodward (https://github.com/doowb)",
+  "repository": "helpers/helper-link-to",
+  "bugs": {
+    "url": "https://github.com/helpers/helper-link-to/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "keywords": []
+}
