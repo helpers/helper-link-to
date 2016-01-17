@@ -46,7 +46,7 @@ module.exports = function linkTo(key, collectionName) {
 
   var collection = this.app[name];
   if (typeof collection === 'undefined') {
-    var msg = 'Invalid collection `' + name + '`.';
+    var msg = 'Invalid collection: `' + name + '`.';
     console.error(msg);
     return '';
   }
@@ -55,7 +55,7 @@ module.exports = function linkTo(key, collectionName) {
   var target = collection.getView(key);
 
   if (!target || !Object.keys(target).length) {
-    var msg = 'Unable target find `' + key + '` in `' + name + '`.';
+    var msg = 'Unable to find `' + key + '` in `' + name + '`.';
     console.error(msg);
     return '';
   }
