@@ -92,7 +92,7 @@ describe('helper-link-to', function() {
           .render(function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Invalid collection `foos`.\n');
+            assert.equal(output, 'Invalid collection: `foos`.\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -105,7 +105,7 @@ describe('helper-link-to', function() {
           .render(function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Unable target find `foo` in `pages`.\n');
+            assert.equal(output, 'Unable to find `foo` in `pages`.\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -150,7 +150,7 @@ describe('helper-link-to', function() {
           .render({engine: 'md'}, function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Invalid collection `foos`.\n');
+            assert.equal(output, 'Invalid collection: `foos`.\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -163,7 +163,7 @@ describe('helper-link-to', function() {
           .render({engine: 'md'}, function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Unable target find `foo` in `posts`.\n');
+            assert.equal(output, 'Unable to find `foo` in `posts`.\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
