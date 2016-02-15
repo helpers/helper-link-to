@@ -23,13 +23,13 @@
     "relative-dest": "^0.1.0"
   },
   "devDependencies": {
-    "assemble-core": "^0.8.1",
+    "assemble-core": "^0.12.0",
     "capture-stream": "^0.1.2",
     "engine-base": "^0.1.2",
     "engine-handlebars": "^0.8.0",
     "handlebars": "^4.0.5",
-    "lodash": "^4.0.0",
-    "mocha": "^2.3.4"
+    "lodash": "^4.3.0",
+    "mocha": "^2.4.5"
   },
   "keywords": [
     "assemble",
