@@ -21,7 +21,7 @@ describe('helper-link-to', function() {
     var restore = capture(process.stderr);
     var actual = helper();
     var output = restore(true);
-    assert.equal(output, 'helper-link-to requires that it is used in an `app` created with `templates`.\n');
+    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
     assert.equal(actual, '');
   });
 
@@ -29,7 +29,7 @@ describe('helper-link-to', function() {
     var restore = capture(process.stderr);
     var actual = helper.call({});
     var output = restore(true);
-    assert.equal(output, 'helper-link-to requires that it is used in an `app` created with `templates`.\n');
+    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
     assert.equal(actual, '');
   });
 
@@ -37,7 +37,7 @@ describe('helper-link-to', function() {
     var restore = capture(process.stderr);
     var actual = _.template('<%= linkTo() %>', {imports: {linkTo: helper}})();
     var output = restore(true);
-    assert.equal(output, 'helper-link-to requires that it is used in an `app` created with `templates`.\n');
+    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
     assert.equal(actual, '');
   });
 
@@ -46,7 +46,7 @@ describe('helper-link-to', function() {
     handlebars.registerHelper('link-to', helper);
     var actual = handlebars.compile('{{link-to}}')();
     var output = restore(true);
-    assert.equal(output, 'helper-link-to requires that it is used in an `app` created with `templates`.\n');
+    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
     assert.equal(actual, '');
   });
 
@@ -92,7 +92,7 @@ describe('helper-link-to', function() {
           .render(function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Invalid collection: `foos`.\n');
+            assert.equal(output, '[helper-link-to]: Unable to find collection "foos".\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -105,7 +105,7 @@ describe('helper-link-to', function() {
           .render(function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Unable to find `foo` in `pages`.\n');
+            assert.equal(output, '[helper-link-to]: Unable to find view "foo" in collection "pages".\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -150,7 +150,7 @@ describe('helper-link-to', function() {
           .render({engine: 'md'}, function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Invalid collection: `foos`.\n');
+            assert.equal(output, '[helper-link-to]: Unable to find collection "foos".\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -163,7 +163,7 @@ describe('helper-link-to', function() {
           .render({engine: 'md'}, function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, 'Unable to find `foo` in `posts`.\n');
+            assert.equal(output, '[helper-link-to]: Unable to find view "foo" in collection "posts".\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });

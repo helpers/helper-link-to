@@ -39,14 +39,14 @@ module.exports = function linkTo(key, collectionName) {
   name = name || 'pages';
 
   if (!this || typeof this.app === 'undefined') {
-    var msg = 'helper-link-to requires that it is used in an `app` created with `templates`.';
+    var msg = '[helper-link-to]: Requires an "app" created with "templates".';
     console.error(msg);
     return '';
   }
 
   var collection = this.app[name];
   if (typeof collection === 'undefined') {
-    var msg = 'Invalid collection: `' + name + '`.';
+    var msg = '[helper-link-to]: Unable to find collection "' + name + '".';
     console.error(msg);
     return '';
   }
@@ -55,7 +55,7 @@ module.exports = function linkTo(key, collectionName) {
   var target = collection.getView(key);
 
   if (!target || !Object.keys(target).length) {
-    var msg = 'Unable to find `' + key + '` in `' + name + '`.';
+    var msg = '[helper-link-to]: Unable to find view "' + key + '" in collection "' + name + '".';
     console.error(msg);
     return '';
   }
