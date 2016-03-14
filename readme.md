@@ -72,7 +72,7 @@ Creates output like:
 
 **Params**
 
-* `key` **{String}**: Name of the view to lookup to link to.
+* `key` **{String|Object}**: Name of the view to lookup to link to. May also pass in a view instance link to.
 * `collectionName` **{String}**: Name of the collection to lookup the view on. (Defaults to "pages")
 * `returns` **{String}**: Relative path to the specified view from the current view.
 
