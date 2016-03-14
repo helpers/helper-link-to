@@ -51,8 +51,15 @@ module.exports = function linkTo(key, collectionName) {
     return '';
   }
 
-  var current = this.context.view;
-  var target = collection.getView(key);
+  var current = this.view || this.context.view;
+  var target;
+  try {
+    target = collection.getView(key);
+  } catch (err) {
+    var msg = '[helper-link-to]: Unable to find view "' + key + '" in collection "' + name + '".\n' + err.message;
+    console.log(msg);
+    return '';
+  }
 
   if (!target || !Object.keys(target).length) {
     var msg = '[helper-link-to]: Unable to find view "' + key + '" in collection "' + name + '".';
