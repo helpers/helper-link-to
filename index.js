@@ -24,7 +24,7 @@ var relativePath = require('relative-dest');
  * {{! Handlebars example linking from "home.html" to "blog/post-1.html" in the "posts" collection }}
  * <a href="{{link-to 'post-1' 'posts'}}">Post 1</a>
  * ```
- * @param  {String} `key` Name of the view to lookup to link to.
+ * @param  {String|Object} `key` Name of the view to lookup to link to. May also pass in a view instance link to.
  * @param  {String} `collectionName` Name of the collection to lookup the view on. (Defaults to "pages")
  * @return {String} Relative path to the specified view from the current view.
  * @api public
@@ -43,6 +43,10 @@ module.exports = function linkTo(key, collectionName) {
     console.error(msg);
     return '';
   }
+  var current = this.view || this.context.view;
+  if (typeof key === 'object' && (key.isView || key.isItem)) {
+    return link(current, key);
+  }
 
   var collection = this.app[name];
   if (typeof collection === 'undefined') {
@@ -51,7 +55,6 @@ module.exports = function linkTo(key, collectionName) {
     return '';
   }
 
-  var current = this.view || this.context.view;
   var target;
   try {
     target = collection.getView(key);
@@ -67,7 +70,11 @@ module.exports = function linkTo(key, collectionName) {
     return '';
   }
 
+  return link(current, target);
+};
+
+function link(current, target) {
   var fromDest = current.dest || current.path;
   var targetDest = target.dest || target.path;
   return relativePath(fromDest, targetDest);
-};
+}
