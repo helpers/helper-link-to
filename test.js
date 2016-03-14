@@ -120,6 +120,21 @@ describe('helper-link-to', function() {
             cb();
           });
       });
+
+      it('should render link when `key` is a view instance:', function(cb) {
+        app.preCompile(/def\.hbs/, function(file, next) {
+          file.data.related = app.pages.getView('abc');
+          next();
+        });
+
+        app.page('abc', {path: 'abc.hbs', dest: 'abc.html', content: 'abc'});
+        app.page('def', {path: 'def.hbs', dest: 'def.html', content: 'foo {{linkTo related}} bar'})
+          .render(function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./abc.html bar');
+            cb();
+          });
+      });
     });
 
     describe('engine-base', function() {
@@ -173,6 +188,21 @@ describe('helper-link-to', function() {
         app.post('uvw', {path: 'uvw.md', dest: 'uvw.html', content: 'uvw'});
         app.post('xyz', {path: 'xyz.md', dest: 'xyz.html', content: 'foo <%= linkTo("uvw", "posts") %> bar'})
           .render(function (err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./uvw.html bar');
+            cb();
+          });
+      });
+
+      it('should render link when `key` is a view instance:', function(cb) {
+        app.preCompile(/xyz\.md/, function(file, next) {
+          file.data.related = app.posts.getView('uvw');
+          next();
+        });
+
+        app.post('uvw', {path: 'uvw.md', dest: 'uvw.html', content: 'uvw'});
+        app.post('xyz', {path: 'xyz.md', dest: 'xyz.html', content: 'foo <%= linkTo(related) %> bar'})
+          .render(function(err, res) {
             if (err) return cb(err);
             assert.equal(res.content, 'foo ./uvw.html bar');
             cb();
