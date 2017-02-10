@@ -29,6 +29,7 @@ var get = require('get-value');
  * ```
  * @param  {String|Object} `key` Name of the view to lookup to link to. May also pass in a view instance link to.
  * @param  {String} `collectionName` Name of the collection to lookup the view on. (Defaults to "pages")
+ * @param  {Array} `props` Optional array of properties to check when getting the destination path from a view. May use dot notication (data.permalink). (Defaults to ["dest", "path"])
  * @return {String} Relative path to the specified view from the current view.
  * @api public
  */
