@@ -77,11 +77,11 @@
       ]
     },
     "reflinks": [
-      "templates",
       "assemble",
+      "engine-base",
       "engine-handlebars",
-      "verb",
-      "engine-base"
+      "templates",
+      "verb"
     ],
     "lint": {
       "reflinks": true
