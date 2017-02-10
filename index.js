@@ -8,6 +8,9 @@
 'use strict';
 
 var relativePath = require('relative-dest');
+var isObject = require('isobject');
+var koalas = require('koalas');
+var get = require('get-value');
 
 /**
  * [templates][] helper that creates a link from the current view to the specified view
@@ -30,8 +33,26 @@ var relativePath = require('relative-dest');
  * @api public
  */
 
-module.exports = function linkTo(key, collectionName) {
+module.exports = function linkTo(key, collectionName, props, options) {
+  if (isOptions(props)) {
+    options = props;
+    if (Array.isArray(collectionName)) {
+      props = collectionName;
+      collectionName = null;
+    } else {
+      props = null;
+    }
+  }
+
+  if (isOptions(collectionName)) {
+    options = collectionName;
+    collectionName = null;
+  }
+
   var name = collectionName;
+  props = props || ['dest', 'path'];
+
+  // handlebars options
   if (typeof name === 'object') {
     name = null;
   }
@@ -43,9 +64,10 @@ module.exports = function linkTo(key, collectionName) {
     console.error(msg);
     return '';
   }
+
   var current = this.view || this.context.view;
   if (typeof key === 'object' && (key.isView || key.isItem)) {
-    return link(current, key);
+    return link(current, key, props);
   }
 
   var collection = this.app[name];
@@ -70,11 +92,26 @@ module.exports = function linkTo(key, collectionName) {
     return '';
   }
 
-  return link(current, target);
+  return link(current, target, props);
 };
 
-function link(current, target) {
-  var fromDest = current.dest || current.path;
-  var targetDest = target.dest || target.path;
-  return relativePath(fromDest, targetDest);
+function link(from, to, props) {
+  var fromDest = dest(from, props);
+  var toDest = dest(to, props);
+  return relativePath(fromDest, toDest);
+}
+
+function dest(view, props) {
+  if (typeof view === 'string') {
+    return view;
+  }
+  return koalas.apply(koalas, props)
+    .use(function(prop) {
+      return get(view, prop);
+    })
+    .value();
+}
+
+function isOptions(val) {
+  return isObject(val) && val.hash && isObject(val.hash);
 }

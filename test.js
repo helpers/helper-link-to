@@ -135,6 +135,49 @@ describe('helper-link-to', function() {
             cb();
           });
       });
+
+      it('should render link when `key` is a view path:', function(cb) {
+        app.preCompile(/def\.hbs/, function(file, next) {
+          file.data.related = app.pages.getView('abc');
+          next();
+        });
+
+        app.page('abc', {path: 'abc.hbs', dest: 'abc.html', content: 'abc'});
+        app.page('def', {path: 'def.hbs', dest: 'def.html', content: 'foo {{linkTo related.path}} bar'})
+          .render(function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./abc.html bar');
+            cb();
+          });
+      });
+
+      it('should render link using custom props with default collection:', function(cb) {
+        app.onLoad(/\.hbs$/, function(file, next) {
+          file.data.permalink = `blog/2017/02/09/${file.stem}.html`;
+        });
+
+        app.page('abc', {path: 'abc.hbs', dest: 'abc.html', content: 'abc'});
+        app.page('def', {path: 'def.hbs', dest: 'def.html', content: 'foo {{linkTo "abc" props}} bar'})
+          .render({props: ['data.permalink', 'path']}, function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./abc.html bar');
+            cb();
+          });
+      });
+
+      it('should render link using custom props with custom collection:', function(cb) {
+        app.onLoad(/\.hbs$/, function(file, next) {
+          file.data.permalink = `blog/2017/02/09/${file.stem}.html`;
+        });
+
+        app.post('abc', {path: 'abc.hbs', dest: 'abc.html', content: 'abc'});
+        app.page('def', {path: 'def.hbs', dest: 'def.html', content: 'foo {{linkTo "abc" "posts" props}} bar'})
+          .render({props: ['data.permalink', 'path']}, function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./abc.html bar');
+            cb();
+          });
+      });
     });
 
     describe('engine-base', function() {
@@ -203,6 +246,49 @@ describe('helper-link-to', function() {
         app.post('uvw', {path: 'uvw.md', dest: 'uvw.html', content: 'uvw'});
         app.post('xyz', {path: 'xyz.md', dest: 'xyz.html', content: 'foo <%= linkTo(related) %> bar'})
           .render(function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./uvw.html bar');
+            cb();
+          });
+      });
+
+      it('should render link when `key` is a view path:', function(cb) {
+        app.preCompile(/xyz\.md/, function(file, next) {
+          file.data.related = app.posts.getView('uvw');
+          next();
+        });
+
+        app.post('uvw', {path: 'uvw.md', dest: 'uvw.html', content: 'uvw'});
+        app.post('xyz', {path: 'xyz.md', dest: 'xyz.html', content: 'foo <%= linkTo(related.path, "posts") %> bar'})
+          .render(function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./uvw.html bar');
+            cb();
+          });
+      });
+
+      it('should render link using custom props with default collection:', function(cb) {
+        app.onLoad(/\.md$/, function(file, next) {
+          file.data.permalink = `blog/2017/02/09/${file.stem}.html`;
+        });
+
+        app.page('uvw', {path: 'uvw.md', dest: 'uvw.html', content: 'uvw'});
+        app.post('xyz', {path: 'xyz.md', dest: 'xyz.html', content: 'foo <%= linkTo("uvw", props) %> bar'})
+          .render({props: ['data.permalink', 'path']}, function(err, res) {
+            if (err) return cb(err);
+            assert.equal(res.content, 'foo ./uvw.html bar');
+            cb();
+          });
+      });
+
+      it('should render link using custom props with custom collection:', function(cb) {
+        app.onLoad(/\.md$/, function(file, next) {
+          file.data.permalink = `blog/2017/02/09/${file.stem}.html`;
+        });
+
+        app.post('uvw', {path: 'uvw.md', dest: 'uvw.html', content: 'uvw'});
+        app.post('xyz', {path: 'xyz.md', dest: 'xyz.html', content: 'foo <%= linkTo("uvw", "posts", props) %> bar'})
+          .render({props: ['data.permalink', 'path']}, function(err, res) {
             if (err) return cb(err);
             assert.equal(res.content, 'foo ./uvw.html bar');
             cb();

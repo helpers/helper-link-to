@@ -20,6 +20,9 @@
     "test": "mocha"
   },
   "dependencies": {
+    "get-value": "^2.0.6",
+    "isobject": "^3.0.0",
+    "koalas": "^0.1.1",
     "relative-dest": "^0.1.0"
   },
   "devDependencies": {
