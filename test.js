@@ -53,6 +53,7 @@ describe('helper-link-to', function() {
   describe('with app', function() {
     beforeEach(function () {
       app = assemble();
+      app.option('engine', 'hbs');
       app.engine('hbs', require('engine-handlebars'));
       app.engine('md', require('engine-base'));
 
