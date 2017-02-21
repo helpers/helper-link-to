@@ -1,8 +1,8 @@
 /*!
  * helper-link-to <https://github.com/helpers/helper-link-to>
  *
- * Copyright (c) 2016, Brian Woodward.
- * Licensed under the MIT License.
+ * Copyright (c) 2016-2017, Brian Woodward.
+ * Released under the MIT License.
  */
 
 'use strict';
