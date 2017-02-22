@@ -51,7 +51,7 @@ module.exports = function linkTo(key, collectionName, props, options) {
   }
 
   var name = collectionName;
-  props = props || ['dest', 'path'];
+  props = props || ['data.path', 'dest', 'path'];
 
   // handlebars options
   if (typeof name === 'object') {
