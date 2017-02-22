@@ -1,7 +1,7 @@
 {
   "name": "helper-link-to",
   "description": "Templates helper that returns a link path from the current view to the another view.",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "homepage": "https://github.com/helpers/helper-link-to",
   "author": "Brian Woodward (https://github.com/doowb)",
   "contributors": [
