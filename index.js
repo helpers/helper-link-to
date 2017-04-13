@@ -7,112 +7,114 @@
 
 'use strict';
 
-var relativePath = require('relative-dest');
+var relativeDest = require('relative-dest');
 var isObject = require('isobject');
-var koalas = require('koalas');
 var get = require('get-value');
 
 /**
  * [templates][] helper that creates a link from the current view to the specified view
  * on the specified collection.
  *
- *
  * ```hbs
  * {{! Handlebars example linking from "home.html" to "about.html" in the default "pages" collection }}
  * <a href="{{link-to 'about'}}">About</a>
- * ```
  *
- *
- * ```hbs
- * {{! Handlebars example linking from "home.html" to "blog/post-1.html" in the "posts" collection }}
+ * <!-- Handlebars example linking from "home.html" to "blog/post-1.html" in the "posts" collection -->
  * <a href="{{link-to 'post-1' 'posts'}}">Post 1</a>
  * ```
  * @param  {String|Object} `key` Name of the view to lookup to link to. May also pass in a view instance link to.
- * @param  {String} `collectionName` Name of the collection to lookup the view on. (Defaults to "pages")
- * @param  {Array} `props` Optional array of properties to check when getting the destination path from a view. May use dot notication (data.permalink). (Defaults to ["dest", "path"])
+ * @param  {String} `name` (optional) Name of the collection to search for the view. (default="pages")
+ * @param  {Array} `props` Optional array of properties to check when getting the destination path from a view. May use dot notication (data.permalink). (default=["data.path", "dest", "path"])
  * @return {String} Relative path to the specified view from the current view.
  * @api public
  */
 
-module.exports = function linkTo(key, collectionName, props, options) {
-  if (isOptions(props)) {
+module.exports = function linkTo(key, name, props, options) {
+  var app = this && this.app;
+
+  if (!isTemplates(app)) {
+    throw new Error('expected "this.app" to be an instance of "templates"');
+  }
+
+  if (isOptions(name)) {
+    options = name;
+    name = null;
+    props = null;
+  }
+
+  if (Array.isArray(name)) {
     options = props;
-    if (Array.isArray(collectionName)) {
-      props = collectionName;
-      collectionName = null;
-    } else {
-      props = null;
-    }
-  }
-
-  if (isOptions(collectionName)) {
-    options = collectionName;
-    collectionName = null;
-  }
-
-  var name = collectionName;
-  props = props || ['data.path', 'dest', 'path'];
-
-  // handlebars options
-  if (typeof name === 'object') {
+    props = name;
     name = null;
   }
 
-  name = name || 'pages';
-
-  if (!this || typeof this.app === 'undefined') {
-    var msg = '[helper-link-to]: Requires an "app" created with "templates".';
-    console.error(msg);
-    return '';
+  if (isOptions(props)) {
+    options = props;
+    props = null;
   }
 
-  var current = this.view || this.context.view;
-  if (typeof key === 'object' && (key.isView || key.isItem)) {
-    return link(current, key, props);
+  var paths = Array.isArray(props) ? props : ['data.path', 'dest', 'path'];
+  if (!isString(name)) {
+    name = 'pages';
+  }
+
+  var currentView = this.view || this.context.view;
+  if (isView(key)) {
+    return link(currentView, key, paths);
   }
 
   var collection = this.app[name];
   if (typeof collection === 'undefined') {
-    var msg = '[helper-link-to]: Unable to find collection "' + name + '".';
-    console.error(msg);
+    error(this.app, 'collection "' + name + '" does not exist');
     return '';
   }
 
-  var target;
-  try {
-    target = collection.getView(key);
-  } catch (err) {
-    var msg = '[helper-link-to]: Unable to find view "' + key + '" in collection "' + name + '".\n' + err.message;
-    console.log(msg);
+  var targetView = collection.getView(key);
+  if (!isView(targetView)) {
+    error(this.app, 'view "' + key + '" was not found in collection "' + name + '"');
     return '';
   }
 
-  if (!target || !Object.keys(target).length) {
-    var msg = '[helper-link-to]: Unable to find view "' + key + '" in collection "' + name + '".';
-    console.error(msg);
-    return '';
-  }
-
-  return link(current, target, props);
+  return link(currentView, targetView, paths);
 };
 
 function link(from, to, props) {
-  var fromDest = dest(from, props);
-  var toDest = dest(to, props);
-  return relativePath(fromDest, toDest);
+  return relativeDest(dest(from, props), dest(to, props));
 }
 
-function dest(view, props) {
-  if (typeof view === 'string') {
-    return view;
+function dest(view, paths) {
+  var len = paths.length;
+  var idx = -1;
+  while (++idx < len) {
+    var filepath = get(view, paths[idx]);
+    if (filepath) {
+      return filepath;
+    }
   }
-  return koalas.apply(koalas, props)
-    .use(function(prop) {
-      return get(view, prop);
-    })
-    .value();
+}
+
+function isString(str) {
+  return str && typeof str === 'string';
+}
+
+function isView(view) {
+  return isObject(view) && (view.isView || view.isItem);
+}
+
+function isTemplates(app) {
+  return isObject(app) && app.isTemplates;
 }
 
 function isOptions(val) {
-  return isObject(val) && val.hash && isObject(val.hash);
+  return isObject(val) && isObject(val.hash);
+}
+
+function error(app, msg) {
+  if (app && app.hasListeners('error')) {
+    app.emit('error', new Error(msg));
+  } else {
+    var args = [].slice.call(arguments, 1);
+    args.unshift('helper-link-to:');
+    console.error.apply(console, args);
+  }
 }

@@ -18,36 +18,28 @@ function render(str, settings, ctx, cb) {
 
 describe('helper-link-to', function() {
   it('should show an error when used directly', function() {
-    var restore = capture(process.stderr);
-    var actual = helper();
-    var output = restore(true);
-    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
-    assert.equal(actual, '');
+    assert.throws(function() {
+      helper();
+    }, /templates/);
   });
 
   it('should show an error when `this.app` is `undefined`', function() {
-    var restore = capture(process.stderr);
-    var actual = helper.call({});
-    var output = restore(true);
-    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
-    assert.equal(actual, '');
+    assert.throws(function() {
+      helper.call({});
+    }, /templates/);
   });
 
   it('should work as a lodash helper but show error because of missing `app`:', function () {
-    var restore = capture(process.stderr);
-    var actual = _.template('<%= linkTo() %>', {imports: {linkTo: helper}})();
-    var output = restore(true);
-    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
-    assert.equal(actual, '');
+    assert.throws(function() {
+      _.template('<%= linkTo() %>', {imports: {linkTo: helper}})();
+    }, /templates/);
   });
 
   it('should work as a handlebars helper but show error because of missing `app`:', function () {
-    var restore = capture(process.stderr);
     handlebars.registerHelper('link-to', helper);
-    var actual = handlebars.compile('{{link-to}}')();
-    var output = restore(true);
-    assert.equal(output, '[helper-link-to]: Requires an "app" created with "templates".\n');
-    assert.equal(actual, '');
+    assert.throws(function() {
+      handlebars.compile('{{link-to}}')();
+    }, /templates/);
   });
 
   describe('with app', function() {
@@ -93,7 +85,7 @@ describe('helper-link-to', function() {
           .render(function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, '[helper-link-to]: Unable to find collection "foos".\n');
+            assert.equal(output, 'helper-link-to: collection "foos" does not exist\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -106,7 +98,7 @@ describe('helper-link-to', function() {
           .render(function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, '[helper-link-to]: Unable to find view "foo" in collection "pages".\n');
+            assert.equal(output, 'helper-link-to: view "foo" was not found in collection "pages"\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -209,7 +201,7 @@ describe('helper-link-to', function() {
           .render({engine: 'md'}, function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, '[helper-link-to]: Unable to find collection "foos".\n');
+            assert.equal(output, 'helper-link-to: collection "foos" does not exist\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
@@ -222,7 +214,7 @@ describe('helper-link-to', function() {
           .render({engine: 'md'}, function (err, res) {
             if (err) return cb(err);
             var output = restore(true);
-            assert.equal(output, '[helper-link-to]: Unable to find view "foo" in collection "posts".\n');
+            assert.equal(output, 'helper-link-to: view "foo" was not found in collection "posts"\n');
             assert.equal(res.content, 'foo  bar');
             cb();
           });
